@@ -41,3 +41,45 @@ Link to 2015 study: https://www.scitepress.org/Papers/2015/55519/55519.pdf
 
 Link to data: https://www.kaggle.com/uciml/red-wine-quality-cortez-et-al-2009
 
+Code so far: 
+
+``` python 
+import os
+import matplotlib.pyplot as plt
+import tensorflow as tf
+import pandas as pd
+from tensorflow import keras
+
+from sklearn.model_selection import train_test_split as tts
+
+wine = pd.read_csv('/content/winequality-red (1).csv')
+train, test = tts(wine)
+column_names = ['fixed acidity', 'volatile acidity', 'citric acid', 'residual sugar', 'chlorides', 'free sulfur dioxide',
+                'total sulfur dioxide','density','pH','sulphates','alcohol','quality']
+
+feature_names = column_names[:-1]
+label_name = column_names[-1]
+
+#print("Features: {}".format(feature_names))
+#print("Label: {}".format(label_name))
+
+train_x = train[feature_names]
+train_y = train[label_name]
+
+test_x = test[feature_names]
+test_y = test[label_name]
+
+model = tf.keras.Sequential([
+  tf.keras.layers.Flatten(),
+  tf.keras.layers.Dense(1024, activation=tf.nn.relu), 
+  tf.keras.layers.Dense(10, activation = tf.nn.softmax)])
+  
+model.compile(optimizer = 'adam',
+              loss = 'sparse_categorical_crossentropy',
+              metrics = ['accuracy'])
+	      
+model.fit(train_x, train_y, epochs = 100)
+model.evaluate(test_x, test_y)
+### 13/13 [==============================] - 0s 1ms/step - loss: 0.9026 - accuracy: 0.6325
+### [0.902631938457489, 0.6324999928474426]
+```
